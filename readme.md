@@ -19,4 +19,4 @@ let resetButton =
 If you want to check how it looks and feels:
 1. Go to `/samples/HelloWorld`.
 2. Use `dotnet run` command in your favorite terminal.
-3. Navigate to `https://localhost:5000` in your browser of choice.
+3. Navigate to `http://localhost:5000` in your browser of choice.
