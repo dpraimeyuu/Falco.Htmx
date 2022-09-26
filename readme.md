@@ -1,3 +1,6 @@
+### Kudos
+Big thanks and huuuge kudos to [@pim_brouwers](https://twitter.com/pim_brouwers) and to [@angel_d_munoz](https://twitter.com/angel_d_munoz) for help, inspiration and collaboration 🚀
+
 ### Introduction
 
 An experimental [Falco](https://github.com/pimbrouwers/Falco) integration with [htmx](https://htmx.org) JS package.
