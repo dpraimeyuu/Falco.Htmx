@@ -40,9 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Htmx.HttpContextExtensions.fs" />
-    <Compile Include="Htmx.Helpers.fs" />
     <Compile Include="Htmx.fs" />
+    <Compile Include="Extensions.fs" />
   </ItemGroup>
 
   <ItemGroup>
