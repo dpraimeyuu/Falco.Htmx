@@ -22,6 +22,7 @@ type HtmxRequestHeaders =
       /// The id of the triggered element if it exists
       HxTrigger : string option }
 
+[<RequireQualifiedAccess>]
 module Request =
     let getHtmxHeaders (ctx : HttpContext) : HtmxRequestHeaders =
         let headers = Request.getHeaders ctx
@@ -51,6 +52,7 @@ type AjaxContext(?event, ?source, ?handler, ?target, ?swap, ?values, ?headers) =
     /// Headers to submit with the request
     member _.Headers : (string * string) list = defaultArg headers []
 
+[<RequireQualifiedAccess>]
 module Response =
     open System.Text.Json
 
