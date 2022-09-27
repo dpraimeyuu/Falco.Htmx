@@ -1,6 +1,7 @@
 namespace Falco.Htmx
 
 open Falco
+open Microsoft.AspNetCore.Http
 
 /// htmx Request Headers
 type HtmxRequestHeaders =
@@ -22,18 +23,17 @@ type HtmxRequestHeaders =
       HxTrigger : string option }
 
 module Request =
-    let getHtmxHeaders (next : HtmxRequestHeaders -> HttpHandler) : HttpHandler = fun ctx ->
+    let getHtmxHeaders (ctx : HttpContext) : HtmxRequestHeaders =
         let headers = Request.getHeaders ctx
-        let htmxHeaders =
-            { HxBoosted = headers.TryGet "HX-Boosted"
-              HxCurrentUrl = headers.TryGet "HX-Current-URL"
-              HxHistoryRestoreRequest = headers.TryGet "HX-History-Restore-Request"
-              HxPrompt = headers.TryGet "HX-Prompt"
-              HxRequest = headers.TryGet "HX-Request"
-              HxTarget = headers.TryGet "HX-Target"
-              HxTriggerName = headers.TryGet "HX-Trigger-Name"
-              HxTrigger = headers.TryGet "HX-Trigger" }
-        next htmxHeaders ctx
+
+        { HxBoosted = headers.TryGet "HX-Boosted"
+          HxCurrentUrl = headers.TryGet "HX-Current-URL"
+          HxHistoryRestoreRequest = headers.TryGet "HX-History-Restore-Request"
+          HxPrompt = headers.TryGet "HX-Prompt"
+          HxRequest = headers.TryGet "HX-Request"
+          HxTarget = headers.TryGet "HX-Target"
+          HxTriggerName = headers.TryGet "HX-Trigger-Name"
+          HxTrigger = headers.TryGet "HX-Trigger" }
 
 type AjaxContext(?event, ?source, ?handler, ?target, ?swap, ?values, ?headers) =
     /// The source element of the request
