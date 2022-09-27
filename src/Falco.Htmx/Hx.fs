@@ -68,10 +68,14 @@ module Url =
     let path url' = Url url'
 
 module Param =
-    let all = Star
+    let all = AllParam
     let none = NoParams
-    let exclude names = Exclude names
-    let include' names = Include names
+    let exclude names = ExcludeParam names
+    let include' names = IncludeParam names
+
+module Disinherit =
+    let all = AllAttributes
+    let exclude names = ExcludeAttributes names
 
 // ------------
 // AJAX
@@ -144,7 +148,7 @@ let confirm = Attr.create "hx-confirm"
 let disable = Attr.createBool "hx-disable"
 
 /// Control and disable automatic attribute inheritance for child nodes
-let disinherit = Attr.create "hx-disinherit"
+let disinherit (option : DisinheritOption) = Attr.create "hx-disinherit" (DisinheritOption.AsString option)
 
 /// Changes the request encoding type
 let encoding = Attr.create "hx-encoding"

@@ -178,14 +178,26 @@ type UrlOption =
 /// The hx-params attribute allows you to filter the parameters that will be submitted with an AJAX request.
 type ParamOption =
     internal
-    | Star
+    | AllParam
     | NoParams
-    | Exclude of string list
-    | Include of string list with
+    | ExcludeParam of string list
+    | IncludeParam of string list with
 
     static member internal AsString (x : ParamOption) =
         match x with
-        | Star -> "*"
+        | AllParam -> "*"
         | NoParams -> "none"
-        | Exclude names -> String.Concat(["not "; String.Join(",", names)])
-        | Include names -> String.Join(",", names)
+        | ExcludeParam names -> String.Concat(["not "; String.Join(",", names)])
+        | IncludeParam names -> String.Join(",", names)
+
+/// The hx-disinherit attribute allows you to control this automatic attribute inheritance. An example scenario is to allow you to place an hx-boost on the body element of a page, but overriding that behavior in a specific part of the page to allow for more specific behaviors.
+type DisinheritOption =
+    internal
+    | AllAttributes
+    | ExcludeAttributes of string list
+
+    static member internal AsString (x : DisinheritOption) =
+        match x with
+        | AllAttributes -> "*"
+        | ExcludeAttributes [] -> "*"
+        | ExcludeAttributes names -> String.Join(" ", names)

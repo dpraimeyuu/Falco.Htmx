@@ -122,7 +122,7 @@ module HxTests =
             |> should equal ("<div hx-swap-oob=\"" + attrValue  + "\">div</div>"))
 
     [<Fact>]
-    let ``Hx.target should produce element with hx-target attribute`` () =
+    let ``Hx.ext should produce element with hx-target attribute`` () =
         [ elem [ Hx.target Hx.Target.this ], "this"
           elem [ Hx.target (Hx.Target.css "#info-details") ], "#info-details"
           elem [ Hx.target (Hx.Target.closest "tr") ], "closest tr"
@@ -142,9 +142,54 @@ module HxTests =
 
     [<Fact>]
     let ``Hx.vals should produce element with hx-vals attribute`` () =
-        [ elem [ Hx.vals {| myVal = "My Value" |} ], "{\"myVal\":\"My Value\"}"
-          elem [ Hx.valsJs "{myVal: calculateValue()}" ], "js:{myVal: calculateValue()}" ]
+        [ elem [ Hx.vals {| myVal = "My Value" |} ], "{\"myVal\":\"My Value\"}"  ]
         |> List.iter (fun (elem, attrValue) ->
             elem
             |> renderNode
             |> should equal ("<div hx-vals=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.valsJs should produce element with hx-vals attribute`` () =
+        [ elem [ Hx.valsJs "{myVal: calculateValue()}" ], "js:{myVal: calculateValue()}" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-vals=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.confirm should produce element with hx-confirm attribute`` () =
+        elem [ Hx.confirm "Confirm message" ]
+        |> renderNode
+        |> should equal "<div hx-confirm=\"Confirm message\">div</div>"
+
+    [<Fact>]
+    let ``Hx.disable should produce element with hx-disable attribute`` () =
+        elem [ Hx.disable ]
+        |> renderNode
+        |> should equal "<div hx-disable>div</div>"
+
+    [<Fact>]
+    let ``Hx.disinherit should produce element with hx-disinherit attribute`` () =
+        [ elem [ Hx.disinherit Hx.Disinherit.all ], "*"
+          elem [ Hx.disinherit (Hx.Disinherit.exclude []) ], "*"
+          elem [ Hx.disinherit (Hx.Disinherit.exclude [ "hx-select" ]) ], "hx-select"
+          elem [ Hx.disinherit (Hx.Disinherit.exclude [ "hx-select"; "hx-get" ]) ], "hx-select hx-get" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-disinherit=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.encoding should produce element with hx-encoding attribute`` () =
+        elem [ Hx.encoding "multipart/form-data" ]
+        |> renderNode
+        |> should equal "<div hx-encoding=\"multipart/form-data\">div</div>"
+
+    [<Fact>]
+    let ``Hx.ext should produce element with hx-ext attribute`` () =
+        [ elem [ Hx.ext "example" ], "example"
+          elem [ Hx.ext "ignore:example" ], "ignore:example" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-ext=\"" + attrValue  + "\">div</div>"))
