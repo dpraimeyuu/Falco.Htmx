@@ -7,10 +7,40 @@ open Falco.Htmx
 open FsUnit.Xunit
 open Xunit
 
+[<AutoOpen>]
+module Common =
+    let elem attr = Elem.div attr [ Text.raw "div" ]
+
 module Extensions =
     [<Fact>]
-    let ``fake`` () =
-        true |> should equal true
+    let ``Hx.get should produce element with hx-get attribute`` () =
+        elem [ Hx.get "/" ]
+        |> renderNode
+        |> should equal "<div hx-get=\"/\">div</div>"
+
+    [<Fact>]
+    let ``Hx.post should produce element with hx-post attribute`` () =
+        elem [ Hx.post "/" ]
+        |> renderNode
+        |> should equal "<div hx-post=\"/\">div</div>"
+
+    [<Fact>]
+    let ``Hx.put should produce element with hx-put attribute`` () =
+        elem [ Hx.put "/" ]
+        |> renderNode
+        |> should equal "<div hx-put=\"/\">div</div>"
+
+    [<Fact>]
+    let ``Hx.patch should produce element with hx-patch attribute`` () =
+        elem [ Hx.patch "/" ]
+        |> renderNode
+        |> should equal "<div hx-patch=\"/\">div</div>"
+
+    [<Fact>]
+    let ``Hx.delete should produce element with hx-delete attribute`` () =
+        elem [ Hx.delete "/" ]
+        |> renderNode
+        |> should equal "<div hx-delete=\"/\">div</div>"
 
 // module ``Htmx`` =
 //     let withHtmlTag htmlTree=
