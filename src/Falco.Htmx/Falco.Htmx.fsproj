@@ -4,8 +4,8 @@
     <Version>1.0.0-alpha1</Version>
 
     <!-- General info -->
-    <Description>HTMX Bindings for Falco, the F# web toolkit.</Description>
-    <Copyright>Copyright 2022 Damnien Plaza, Pim Brouwers</Copyright>
+    <Description>HTMX Bindings for the Falco web toolkit.</Description>
+    <Copyright>Copyright 2022 Damnien Plaza and Pim Brouwers</Copyright>
     <Authors>Damien Plaza, Pim Brouwers and contributors</Authors>
     <NeutralLanguage>en-CA</NeutralLanguage>
 
@@ -18,7 +18,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!-- NuGet config -->
-    <PackageId>Falco</PackageId>
+    <PackageId>Falco.Htmx</PackageId>
     <PackageTags>fsharp;web;falco;falco-sharp;htmx;</PackageTags>
     <PackageProjectUrl>https://github.com/dpraimeyuu/Falco.Htmx</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
