@@ -7,18 +7,17 @@ open Falco.HostBuilder
 open Falco.Htmx
 open HelloWorld
 
-let useHtmxFromCdn = Elem.script [ Attr.src "https://unpkg.com/htmx.org@1.8.0"] []
-
 let handleHtml : HttpHandler =
     let html =
         Templates.html5 "en"
-            [ 
-                Elem.link [ Attr.href "style.css"; Attr.rel "stylesheet" ];
-                useHtmxFromCdn
+            [
+                Elem.link [ Attr.href "style.css"; Attr.rel "stylesheet" ]
+                Elem.script [ Attr.src "https://unpkg.com/htmx.org@1.8.0"] []
             ]
-            [ Elem.h1 [] [ 
-                Text.raw "Hello from Falco.Htmx" ];
-                Components.clickSection
+            [
+                Elem.h1 [] [
+                    Text.raw "Hello from Falco.Htmx" ]
+                    Components.clickSection
             ]
 
     Response.ofHtml html
@@ -31,7 +30,7 @@ let handleClick : HttpHandler = fun ctx ->
     Components.clickedElement
     |> Response.ofHtml
     |> triggerChangeToResetButton
-        
+
 
 let handlerReset : HttpHandler =
     Components.clickSection

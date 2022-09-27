@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Compile Include="Htmx.fs" />
+    <Compile Include="Hx.fs" />
     <Compile Include="Extensions.fs" />
   </ItemGroup>
 
