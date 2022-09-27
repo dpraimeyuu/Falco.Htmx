@@ -8,7 +8,7 @@ open FSharp.Core
 
 module Target =
     let this = This
-    let cssSelect selector = CssSelector selector
+    let css selector = CssSelector selector
     let closest selector = Closest selector
     let find selector = Find selector
 
@@ -34,9 +34,25 @@ module Swap =
     let none = NoSwap
 
 module SwapOob =
-    let true' = True
-    let swap (option : SwapOption) = SwapOption option
-    let swapSelect (option : SwapOption * TargetOption) = SwapOptionSelect option
+    let true' = SwapTrue
+
+    let innerHTML = SwapOption InnerHTML
+    let outerHTML = SwapOption OuterHTML
+    let beforebegin = SwapOption BeforeBegin
+    let afterbegin = SwapOption AfterBegin
+    let beforeend = SwapOption BeforEend
+    let afterend = SwapOption AfterEnd
+    let delete = SwapOption Delete
+    let none = SwapOption NoSwap
+
+    let innerHTMLTarget target = SwapOptionSelect (InnerHTML, target)
+    let outerHTMLTarget target = SwapOptionSelect (OuterHTML, target)
+    let beforebeginTarget target = SwapOptionSelect (BeforeBegin, target)
+    let afterbeginTarget target = SwapOptionSelect (AfterBegin, target)
+    let beforeendTarget target = SwapOptionSelect (BeforEend, target)
+    let afterendTarget target = SwapOptionSelect (AfterEnd, target)
+    let deleteTarget target = SwapOptionSelect (Delete, target)
+    let noneTarget target = SwapOptionSelect (NoSwap, target)
 
 module Sync =
     let drop = Drop
@@ -46,10 +62,10 @@ module Sync =
     let queueLast = Queue Last
     let queueAll = Queue All
 
-module PushUrl =
+module Url =
     let true' = True
     let false' = False
-    let url url' = Url url'
+    let path url' = Url url'
 
 module Param =
     let all = Star
@@ -109,7 +125,13 @@ let trigger (options : TriggerOption list) =
     |> Attr.create "hx-trigger"
 
 /// Adds values to the parameters to submit with the request (JSON-formatted)
-let vals = Attr.create "hx-vals"
+let vals input =
+    input
+    |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+    |> Attr.create "hx-vals"
+
+/// Adds values to the parameters to submit with the request (JSON-formatted)
+let valsJs json = Attr.create "hx-vals" (String.Concat([ "js:"; json]))
 
 // ------------
 // Additional Attributes

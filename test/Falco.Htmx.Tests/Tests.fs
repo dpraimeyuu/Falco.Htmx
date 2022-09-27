@@ -11,7 +11,7 @@ open Xunit
 module Common =
     let elem attr = Elem.div attr [ Text.raw "div" ]
 
-module Extensions =
+module HxTests =
     [<Fact>]
     let ``Hx.get should produce element with hx-get attribute`` () =
         elem [ Hx.get "/" ]
@@ -42,244 +42,109 @@ module Extensions =
         |> renderNode
         |> should equal "<div hx-delete=\"/\">div</div>"
 
-// module ``Htmx`` =
-//     let withHtmlTag htmlTree=
-//         "<!DOCTYPE html>" + htmlTree
+    [<Theory>]
+    [<InlineData(true, "true")>]
+    [<InlineData(false, "false")>]
+    let ``Hx.boost should produce element with hx-boost attribute`` (enabled, attrValue) =
+        elem [ Hx.boost enabled ]
+        |> renderNode
+        |> should equal ("<div hx-boost=\"" + attrValue + "\">div</div>")
 
-//     [<Fact>]
-//     let ``renders div with "hx-get" attribute containing given url`` () =
-//         let element =
-//             Elem.div [Hx.get (Uri "/posts")] []
-//             |> renderHtml
-//         let expected =
-//             withHtmlTag "<div hx-get=\"/posts\"></div>"
+    [<Fact>]
+    let ``Hx.pushUrl should produce element with hx-push-url attribute`` () =
+        [ elem [ Hx.pushUrl Hx.Url.true' ], "true"
+          elem [ Hx.pushUrl Hx.Url.false' ], "false"
+          elem [ Hx.pushUrl (Hx.Url.path "/") ], "/" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-push-url=\"" + attrValue  + "\">div</div>"))
 
-//         Assert.Equal(expected, element)
-//     [<Fact>]
-//     let ``renders div with "hx-post" attribute containing given url`` () =
-//         let element =
-//             Elem.div [Hx.post (Uri "/posts")] []
-//             |> renderHtml
-//         let expected =
-//             withHtmlTag "<div hx-post=\"/posts\"></div>"
+    [<Fact>]
+    let ``Hx.select should produce element with hx-select attribute`` () =
+        [ elem [ Hx.select Hx.Target.this ], "this"
+          elem [ Hx.select (Hx.Target.css "#info-details") ], "#info-details"
+          elem [ Hx.select (Hx.Target.closest "tr") ], "closest tr"
+          elem [ Hx.select (Hx.Target.find "table") ], "find table" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-select=\"" + attrValue  + "\">div</div>"))
 
-//         Assert.Equal(expected, element)
+    [<Fact>]
+    let ``Hx.selectOob should produce element with hx-select-oob attribute`` () =
+        [ elem [ Hx.selectOob Hx.Target.this ], "this"
+          elem [ Hx.selectOob (Hx.Target.css "#info-details") ], "#info-details"
+          elem [ Hx.selectOob (Hx.Target.closest "tr") ], "closest tr"
+          elem [ Hx.selectOob (Hx.Target.find "table") ], "find table" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-select-oob=\"" + attrValue  + "\">div</div>"))
 
-//     [<Fact>]
-//     let ``renders div with "hx-put" attribute containing given url`` () =
-//         let element =
-//             Elem.div [Hx.put (Uri "/posts")] []
-//             |> renderHtml
-//         let expected =
-//             withHtmlTag "<div hx-put=\"/posts\"></div>"
+    [<Fact>]
+    let ``Hx.swap should produce element with hx-swap attribute`` () =
+        [ elem [ Hx.swap Hx.Swap.innerHTML ], "innerHTML"
+          elem [ Hx.swap Hx.Swap.outerHTML ], "outerHTML"
+          elem [ Hx.swap Hx.Swap.beforebegin ], "beforebegin"
+          elem [ Hx.swap Hx.Swap.afterbegin ], "afterbegin"
+          elem [ Hx.swap Hx.Swap.beforeend ], "beforeend"
+          elem [ Hx.swap Hx.Swap.afterend ], "afterend"
+          elem [ Hx.swap Hx.Swap.delete ], "delete"
+          elem [ Hx.swap Hx.Swap.none ], "none" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-swap=\"" + attrValue  + "\">div</div>"))
 
-//         Assert.Equal(expected, element)
+    [<Fact>]
+    let ``Hx.swapOob should produce element with hx-swap-oob attribute`` () =
+        [ elem [ Hx.swapOob Hx.SwapOob.true' ], "true"
+          elem [ Hx.swapOob Hx.SwapOob.innerHTML ], "innerHTML"
+          elem [ Hx.swapOob Hx.SwapOob.outerHTML ], "outerHTML"
+          elem [ Hx.swapOob Hx.SwapOob.beforebegin ], "beforebegin"
+          elem [ Hx.swapOob Hx.SwapOob.afterbegin ], "afterbegin"
+          elem [ Hx.swapOob Hx.SwapOob.beforeend ], "beforeend"
+          elem [ Hx.swapOob Hx.SwapOob.afterend ], "afterend"
+          elem [ Hx.swapOob Hx.SwapOob.delete ], "delete"
+          elem [ Hx.swapOob Hx.SwapOob.none ], "none"
+          elem [ Hx.swapOob (Hx.SwapOob.innerHTMLTarget (Hx.Target.css "#info-details")) ], "innerHTML:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.outerHTMLTarget (Hx.Target.css "#info-details")) ], "outerHTML:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.beforebeginTarget (Hx.Target.css "#info-details")) ], "beforebegin:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.afterbeginTarget (Hx.Target.css "#info-details")) ], "afterbegin:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.beforeendTarget (Hx.Target.css "#info-details")) ], "beforeend:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.afterendTarget (Hx.Target.css "#info-details")) ], "afterend:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.deleteTarget (Hx.Target.css "#info-details")) ], "delete:#info-details"
+          elem [ Hx.swapOob (Hx.SwapOob.noneTarget (Hx.Target.css "#info-details")) ], "none:#info-details" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-swap-oob=\"" + attrValue  + "\">div</div>"))
 
-//     [<Fact>]
-//     let ``renders div with "hx-delete" attribute containing given url`` () =
-//         let element =
-//             Elem.div [Hx.delete (Uri "/posts")] []
-//             |> renderHtml
-//         let expected =
-//             withHtmlTag "<div hx-delete=\"/posts\"></div>"
+    [<Fact>]
+    let ``Hx.target should produce element with hx-target attribute`` () =
+        [ elem [ Hx.target Hx.Target.this ], "this"
+          elem [ Hx.target (Hx.Target.css "#info-details") ], "#info-details"
+          elem [ Hx.target (Hx.Target.closest "tr") ], "closest tr"
+          elem [ Hx.target (Hx.Target.find "table") ], "find table" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-target=\"" + attrValue  + "\">div</div>"))
 
-//         Assert.Equal(expected, element)
+    [<Fact>]
+    let ``Hx.trigger should produce element with hx-trigger attribute`` () =
+        [  ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-trigger=\"" + attrValue  + "\">div</div>"))
 
-
-//     [<Fact>]
-//     let ``renders div with "hx-patch" attribute containing given url`` () =
-//         let element =
-//             Elem.div [Hx.patch (Uri "/posts")] []
-//             |> renderHtml
-//         let expected =
-//             withHtmlTag "<div hx-patch=\"/posts\"></div>"
-
-//         Assert.Equal(expected, element)
-
-//     module ``Triggers`` =
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter every 2s" trigger`` () =
-//             let mouseenterEvery2Seconds' =
-//                 mouseenter (every 2.<second>)
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterEvery2Seconds']] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter every 2s\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter once" trigger`` () =
-//             let mouseenterOnce' =
-//                 mouseenter Modifiers.once
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterOnce']] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter once\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter delay:0.5s" trigger`` () =
-//             let mouseenterDelayHalfSecond =
-//                 mouseenter (delay 0.5<second>)
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterDelayHalfSecond]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter delay:0.5s\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter throttle:0.7s" trigger`` () =
-//             let mouseenterThrottle700MiliSeconds =
-//                 mouseenter (throttle 0.7<second>)
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterThrottle700MiliSeconds]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter throttle:0.7s\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter target:#nameField" trigger`` () =
-//             let mouseenterTargetIdNameField =
-//                 mouseenter (target (CSS_Selector "#nameField"))
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterTargetIdNameField]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter target:#nameField\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter consume" trigger`` () =
-//             let mouseenterConsume =
-//                 mouseenter consume
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterConsume]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter consume\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing "mouseenter queue:none" trigger`` () =
-//             let mouseenterQueryNone =
-//                 mouseenter (queue Queue.None)
-
-//             let element =
-//                 Elem.div [Hx.trigger [mouseenterQueryNone]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"mouseenter queue:none\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-trigger" attribute containing custom event "doX" trigger`` () =
-
-//             let element =
-//                 Elem.div [Hx.trigger [fromResponse (ResponseEvent "doX")]] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-trigger=\"doX from:body\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//     module ``Swap`` =
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "innerHTML" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap innerHTML] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"innerHTML\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "outerHTML" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap outerHTML] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"outerHTML\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "beforebegin" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap beforebegin] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"beforebegin\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "afterbegin" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap afterbegin] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"afterbegin\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "beforeend" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap beforeend] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"beforeend\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "delete" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap delete] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"delete\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//         [<Fact>]
-//         let ``renders div with "hx-swap" attribute containing "none" swap`` () =
-
-//             let element =
-//                 Elem.div [Hx.swap none] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-swap=\"none\"></div>"
-
-//             Assert.Equal(expected, element)
-
-//     module ``Target`` =
-
-//         [<Fact>]
-//         let ``renders div with "hx-target" attribute containing "#nameField" target`` () =
-//             let element =
-//                 Elem.div [Hx.target (CSS_Selector("#nameField"))] []
-//                 |> renderHtml
-//             let expected =
-//                 withHtmlTag "<div hx-target=\"#nameField\"></div>"
-
-//             Assert.Equal(expected, element)
+    [<Fact>]
+    let ``Hx.vals should produce element with hx-vals attribute`` () =
+        [ elem [ Hx.vals {| myVal = "My Value" |} ], "{\"myVal\":\"My Value\"}"
+          elem [ Hx.valsJs "{myVal: calculateValue()}" ], "js:{myVal: calculateValue()}" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-vals=\"" + attrValue  + "\">div</div>"))

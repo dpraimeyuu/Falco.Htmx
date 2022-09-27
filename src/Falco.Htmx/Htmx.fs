@@ -2,7 +2,6 @@ namespace Falco.Htmx
 
 open System
 open System.Text.Json
-open Falco.Markup
 open FSharp.Core
 
 module internal Json =
@@ -124,13 +123,13 @@ type SwapOption =
 
 type SwapOobOption =
     internal
-    | True
+    | SwapTrue
     | SwapOption of SwapOption
     | SwapOptionSelect of SwapOption * TargetOption with
 
     static member internal AsString (x : SwapOobOption) =
         match x with
-        | True -> "true"
+        | SwapTrue -> "true"
         | SwapOption swap -> SwapOption.AsString swap
         | SwapOptionSelect (swap, selector) ->
             String.Concat([ SwapOption.AsString swap; ":"; TargetOption.AsString selector ])
