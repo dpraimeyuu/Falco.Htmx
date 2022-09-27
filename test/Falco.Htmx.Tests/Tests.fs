@@ -122,7 +122,7 @@ module HxTests =
             |> should equal ("<div hx-swap-oob=\"" + attrValue  + "\">div</div>"))
 
     [<Fact>]
-    let ``Hx.ext should produce element with hx-target attribute`` () =
+    let ``Hx.target should produce element with hx-target attribute`` () =
         [ elem [ Hx.target Hx.Target.this ], "this"
           elem [ Hx.target (Hx.Target.css "#info-details") ], "#info-details"
           elem [ Hx.target (Hx.Target.closest "tr") ], "closest tr"
@@ -193,3 +193,96 @@ module HxTests =
             elem
             |> renderNode
             |> should equal ("<div hx-ext=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.headers should produce element with hx-headers attribute`` () =
+        [ elem [ Hx.headers [] ], "{}"
+          elem [ Hx.headers [ "myHeader", "my value"] ], "{\"myHeader\":\"my value\"}" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-headers=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.historyElt should produce element with hx-historyElt attribute`` () =
+        elem [ Hx.historyElt ]
+        |> renderNode
+        |> should equal "<div hx-history-elt>div</div>"
+
+    [<Fact>]
+    let ``Hx.include' should produce element with hx-include attribute`` () =
+        [ elem [ Hx.include' [ Hx.Target.this ] ], "this"
+          elem [ Hx.include' [ Hx.Target.css "#info-details" ] ], "#info-details"
+          elem [ Hx.include' [ Hx.Target.closest "tr" ] ], "closest tr"
+          elem [ Hx.include' [ Hx.Target.find "table" ] ], "find table"
+          elem [ Hx.include' [ Hx.Target.css "*"; Hx.Target.find "table" ] ], "*, find table" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-include=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.indicator should produce element with hx-indicator attribute`` () =
+        [ elem [ Hx.indicator Hx.Target.this ], "this"
+          elem [ Hx.indicator (Hx.Target.css "#info-details") ], "#info-details"
+          elem [ Hx.indicator (Hx.Target.closest "tr") ], "closest tr"
+          elem [ Hx.indicator (Hx.Target.find "table") ], "find table" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-indicator=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.params' should produce element with hx-params attribute`` () =
+        [ elem [ Hx.params' Hx.Param.all ], "*"
+          elem [ Hx.params' Hx.Param.none ], "none"
+          elem [ Hx.params' (Hx.Param.exclude [ "name" ]) ], "not name"
+          elem [ Hx.params' (Hx.Param.exclude [ "name"; "email" ]) ], "not name, email"
+          elem [ Hx.params' (Hx.Param.include' [ "name" ]) ], "name"
+          elem [ Hx.params' (Hx.Param.include' [ "name"; "email" ]) ], "name, email" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-params=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.preserve should produce element with hx-preserve attribute`` () =
+        elem [ Hx.preserve ]
+        |> renderNode
+        |> should equal "<div hx-preserve>div</div>"
+
+    [<Fact>]
+    let ``Hx.prompt should produce element with hx-prompt attribute`` () =
+        elem [ Hx.prompt "Prompt message" ]
+        |> renderNode
+        |> should equal "<div hx-prompt=\"Prompt message\">div</div>"
+
+    [<Fact>]
+    let ``Hx.replaceUrl should produce element with hx-replace-url attribute`` () =
+        [ elem [ Hx.replaceUrl Hx.Url.true' ], "true"
+          elem [ Hx.replaceUrl Hx.Url.false' ], "false"
+          elem [ Hx.replaceUrl (Hx.Url.path "/") ], "/" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-replace-url=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.request should produce element with hx-request attribute`` () =
+        [ elem [ Hx.request "\"timeout\":100" ], "\"timeout\":100"
+          elem [ Hx.request "js: timeout:getTimeoutSetting()" ], "js: timeout:getTimeoutSetting()" ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-request=\"" + attrValue  + "\">div</div>"))
+
+    [<Fact>]
+    let ``Hx.sync should produce element with hx-sync attribute`` () =
+        [ elem [ Hx.sync (Hx.Target.this, None) ], "this"
+          elem [ Hx.sync (Hx.Target.this, Some Hx.Sync.abort) ], "this:abort"
+          elem [ Hx.sync (Hx.Target.closest "tr", Some Hx.Sync.replace) ], "closest tr:replace"
+        ]
+        |> List.iter (fun (elem, attrValue) ->
+            elem
+            |> renderNode
+            |> should equal ("<div hx-sync=\"" + attrValue  + "\">div</div>"))

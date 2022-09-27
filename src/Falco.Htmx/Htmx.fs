@@ -187,8 +187,8 @@ type ParamOption =
         match x with
         | AllParam -> "*"
         | NoParams -> "none"
-        | ExcludeParam names -> String.Concat(["not "; String.Join(",", names)])
-        | IncludeParam names -> String.Join(",", names)
+        | ExcludeParam names -> String.Concat(["not "; String.Join(", ", names)])
+        | IncludeParam names -> String.Join(", ", names)
 
 /// The hx-disinherit attribute allows you to control this automatic attribute inheritance. An example scenario is to allow you to place an hx-boost on the body element of a page, but overriding that behavior in a specific part of the page to allow for more specific behaviors.
 type DisinheritOption =

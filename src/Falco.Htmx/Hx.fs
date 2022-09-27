@@ -167,10 +167,10 @@ let headers (values : (string * string) list) =
 let historyElt = Attr.createBool "hx-history-elt"
 
 /// Include additional data in requests
-let include' (values : (string * string) list) =
+let include' (values : TargetOption list) =
     values
-    |> Map.ofList
-    |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+    |> List.map TargetOption.AsString
+    |> fun x -> String.Join(", ", x)
     |> Attr.create "hx-include"
 
 /// The element to put the htmx-request class on during the request
@@ -197,7 +197,7 @@ let sync (targetOption : TargetOption, syncOption : SyncOption option) =
         let target' = TargetOption.AsString targetOption
 
         match syncOption with
-        | Some sync' -> ""
+        | Some sync' -> String.Concat([ target'; ":"; SyncOption.AsString sync' ])
         | None -> target'
 
     Attr.create "hx-sync" attrValue
