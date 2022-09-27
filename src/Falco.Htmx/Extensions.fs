@@ -35,21 +35,21 @@ module Request =
               HxTrigger = headers.TryGet "HX-Trigger" }
         next htmxHeaders ctx
 
-type AjaxContext(event, ?source, ?handler, ?target, ?swap, ?values, ?headers) =
-    /// An event that "triggered" the request
-    member _.Event : string = event
+type AjaxContext(?event, ?source, ?handler, ?target, ?swap, ?values, ?headers) =
     /// The source element of the request
-    member _.Source : string option = source
+    member _.Source : TargetOption option = source
+    /// An event that "triggered" the request
+    member _.Event : string option = event
     /// A callback that will handle the response HTML
     member _.Handler : string option = handler
     /// The target to swap the response into
-    member _.Target : string option = target
+    member _.Target : TargetOption option = target
     /// How the response will be swapped in relative to the target
-    member _.Swap : string option = swap
+    member _.Swap : SwapOption option = swap
     /// Values to submit with the request
-    member _.Values : string option = values
+    member _.Values : (string * string) list = defaultArg values []
     /// Headers to submit with the request
-    member _.Headers : string option = headers
+    member _.Headers : (string * string) list = defaultArg headers []
 
 module Response =
     open System.Text.Json
@@ -57,9 +57,21 @@ module Response =
     let [<Literal>] private _trueValue = "true"
 
     // Allows you to do a client-side redirect that does not do a full page reload
-    let withHxLocation (ctx : AjaxContext) : HttpResponseModifier =
-        Response.withHeaders [
-            "HX-Location", JsonSerializer.Serialize(ctx, Json.defaultSerializerOptions) ]
+    let withHxLocation (path : string, ctx : AjaxContext option) : HttpResponseModifier =
+        let headerValue =
+            match ctx with
+            | None -> path
+            | Some ctx' ->
+                [ "path", path
+                  "source", Option.map TargetOption.AsString ctx'.Source |> Option.defaultValue ""
+                  "event", Option.defaultValue "" ctx'.Event
+                  "handler", Option.defaultValue "" ctx'.Handler
+                  "target", Option.map TargetOption.AsString ctx'.Target |> Option.defaultValue ""
+                  "swap", Option.map SwapOption.AsString ctx'.Swap |> Option.defaultValue "" ]
+                |> Map.ofList
+                |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+
+        Response.withHeaders [ "HX-Location", headerValue ]
 
     // Pushes a new url into the history stack
     let withHxPushUrl (url: string) : HttpResponseModifier =
@@ -85,19 +97,19 @@ module Response =
     let withHxRetarget (option : TargetOption) =
         Response.withHeaders [ "HX-Retarget", TargetOption.AsString option ]
 
-    // // Allows you to trigger client side events, see the documentation for more info
-    // let withHxTrigger<'T>(event: string, detail : 'T option) : HttpResponseModifier =
-    //     let headerValue =
-    //         match detail with
-    //         | Some detail' ->
-    //             [ event, detail ]
-    //             |> Map.ofList
-    //             |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+    // Allows you to trigger client side events, see the documentation for more info
+    let withHxTrigger<'T>(event: string, detail : 'T option) : HttpResponseModifier =
+        let headerValue =
+            match detail with
+            | Some detail' ->
+                [ event, detail ]
+                |> Map.ofList
+                |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
 
-    //         | None ->
-    //             event
+            | None ->
+                event
 
-    //     Response.withHeaders [ "HX-Trigger", headerValue ]
+        Response.withHeaders [ "HX-Trigger", headerValue ]
 
     // Allows you to trigger client side events, see the documentation for more info
     let withHxTriggerAfterSettle : HttpResponseModifier =
