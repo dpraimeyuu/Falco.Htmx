@@ -56,16 +56,10 @@ module Response =
 
     let [<Literal>] private _trueValue = "true"
 
-    let private defaultJsonOptions =
-        let options = JsonSerializerOptions()
-        options.AllowTrailingCommas <- true
-        options.PropertyNameCaseInsensitive <- true
-        options
-
     // Allows you to do a client-side redirect that does not do a full page reload
     let withHxLocation (ctx : AjaxContext) : HttpResponseModifier =
         Response.withHeaders [
-            "HX-Location", JsonSerializer.Serialize(ctx, defaultJsonOptions) ]
+            "HX-Location", JsonSerializer.Serialize(ctx, Json.defaultSerializerOptions) ]
 
     // Pushes a new url into the history stack
     let withHxPushUrl (url: string) : HttpResponseModifier =
@@ -98,7 +92,7 @@ module Response =
     //         | Some detail' ->
     //             [ event, detail ]
     //             |> Map.ofList
-    //             |> fun x -> JsonSerializer.Serialize(x, defaultJsonOptions)
+    //             |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
 
     //         | None ->
     //             event

@@ -1,6 +1,7 @@
 namespace Falco.Htmx
 
 open System
+open System.Text.Json
 open Falco.Markup
 open FSharp.Core
 
@@ -136,6 +137,14 @@ open FSharp.Core
 //         ""
 //     |> Attr.create "hx-trigger"
 
+module internal Json =
+    let private defaultSerializerOptions =
+        let options = JsonSerializerOptions()
+        options.AllowTrailingCommas <- true
+        options.PropertyNameCaseInsensitive <- true
+        options
+
+
 /// The hx-target attribute allows you to target a different element for swapping than the one issuing the AJAX request.
 type TargetOption =
     private
@@ -245,10 +254,7 @@ module Sync =
     let queueLast = Queue Last
     let queueAll = Queue All
 
-/// The HX-Push-Url header allows you to push a URL into the browser location history. This creates a new history entry, allowing navigation with the browser’s back and forward buttons. This is similar to the hx-push-url attribute.
-///
-/// If present, this header overrides any behavior defined with attributes.
-type PushUrlOption =
+type UrlOption =
     private
     | True
     | False
@@ -264,6 +270,27 @@ module PushUrl =
     let true' = True
     let false' = False
     let url url' = Url url'
+
+/// The hx-params attribute allows you to filter the parameters that will be submitted with an AJAX request.
+type ParamOption =
+    private
+    | Star
+    | NoParams
+    | Exclude of string list
+    | Include of string list with
+
+    static member internal AsString (x : ParamsOption) =
+        match x with
+        | Start -> "*"
+        | NoParams -> "none"
+        | Exclude names -> String.Concat(["not "; String.Join(",", names)])
+        | Include names -> String.Join(",", names)
+
+module Param =
+    let all = Star
+    let none = NoParams
+    let exclude names = Exclude names
+    let include names = Include names
 
 [<RequireQualifiedAccess>]
 module Hx =
@@ -294,7 +321,7 @@ module Hx =
     let boost (enabled : bool) = Attr.create "hx-boost" (if enabled then "true" else "false")
 
     /// Pushes the URL into the browser location bar, creating a new history entry
-    let pushUrl (option : PushUrlOption) = Attr.create "hx-push-url" (PushUrlOption.AsString option)
+    let pushUrl (option : UrlOption) = Attr.create "hx-push-url" (PushUrlOption.AsString option)
 
     /// Select content to swap in from a response
     let select (option : TargetOption) = Attr.create "hx-select" (TargetOption.AsString option)
@@ -325,7 +352,7 @@ module Hx =
     let confirm = Attr.create "hx-confirm"
 
     /// Disables htmx processing for the given node and any children nodes
-    let disable = Attr.create "hx-disable"
+    let disable = Attr.createBool "hx-disable"
 
     /// Control and disable automatic attribute inheritance for child nodes
     let disinherit = Attr.create "hx-disinherit"
@@ -337,34 +364,39 @@ module Hx =
     let ext = Attr.create "hx-ext"
 
     /// Adds to the headers that will be submitted with the request
-    let headers = Attr.create "hx-headers"
+    let headers (headers : (string * string) list) =
+        headers
+        |> Map.ofList
+        |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+        |> Attr.create "hx-headers"
 
     /// The element to snapshot and restore during history navigation
-    let historyElt = Attr.create "hx-history-elt"
+    let historyElt = Attr.createBool "hx-history-elt"
 
     /// Include additional data in requests
-    let include' = Attr.create "hx-include"
+    let include' (values : (string * string) list) =
+        headers
+        |> Map.ofList
+        |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
+        |> Attr.create "hx-include"
 
     /// The element to put the htmx-request class on during the request
-    let indicator = Attr.create "hx-indicator"
+    let indicator (option : TargetOption) = Attr.create "hx-indicator" (TargetOption.AsString option)
 
     /// Filters the parameters that will be submitted with a request
-    let params' = Attr.create "hx-params"
+    let params' (option : ParamOption) = Attr.create "hx-params" (ParamOption.AsString option)
 
     /// Specifies elements to keep unchanged between requests
-    let preserve = Attr.create "hx-preserve"
+    let preserve = Attr.createBool "hx-preserve"
 
     /// Shows a prompt() before submitting a request
     let prompt = Attr.create "hx-prompt"
 
     /// Replace the URL in the browser location bar
-    let replaceUrl = Attr.create "hx-replace-url"
+    let replaceUrl (option : UrlOption) = Attr.create "hx-replace-url" (UrlOption.AsString option)
 
     /// Configures various aspects of the request
     let request = Attr.create "hx-request"
-
-    /// Has been moved to an extension. Documentation for older versions
-    let sse = Attr.create "hx-sse"
 
     /// Control how requests made be different elements are synchronized
     let sync (targetOption : TargetOption, syncOption : SyncOption option) =
@@ -376,6 +408,3 @@ module Hx =
             | None -> target'
 
         Attr.create "hx-sync" attrValue
-
-    /// Has been moved to an extension. Documentation for older versions
-    let ws = Attr.create "hx-ws"
