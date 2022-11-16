@@ -5,8 +5,8 @@
 
     <!-- General info -->
     <Description>HTMX Bindings for the Falco web toolkit.</Description>
-    <Copyright>Copyright 2022 Damnien Plaza and Pim Brouwers</Copyright>
-    <Authors>Damien Plaza, Pim Brouwers and contributors</Authors>
+    <Copyright>Copyright 2022 Damian Plaza and Pim Brouwers</Copyright>
+    <Authors>Damian Plaza, Pim Brouwers and contributors</Authors>
     <NeutralLanguage>en-CA</NeutralLanguage>
 
     <!-- Build config -->

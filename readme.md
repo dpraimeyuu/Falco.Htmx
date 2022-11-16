@@ -53,4 +53,4 @@ There's an [issue](https://github.com/dpraimeyuu/Falco.Htmx/issues) for that.
 
 ## License
 
-Built with ♥ by [Damien Plaza](https://github.com/dpraimeyuu) & [Pim Brouwers](https://github.com/pimbrouwers). Licensed under [Apache License 2.0](https://github.com/dpraimeyuu/Falco.Htmx/blob/master/LICENSE).
+Built with ♥ by [Damian Plaza](https://github.com/dpraimeyuu) & [Pim Brouwers](https://github.com/pimbrouwers). Licensed under [Apache License 2.0](https://github.com/dpraimeyuu/Falco.Htmx/blob/master/LICENSE).
