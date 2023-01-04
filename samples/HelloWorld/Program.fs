@@ -13,7 +13,7 @@ module Components =
 
     let clickMeElement =
         Elem.div [
-            Attr.style "width: 40px; text-align: center; margin-bottom: 5px; border: 1px black solid;"
+            Attr.style "width: 40px; text-align: center; margin-bottom: 5px; border: 1px black solid; cursor: pointer;"
             Hx.post "/click"
             Hx.swap Hx.Swap.innerHTML
             Hx.target (Hx.Target.css "#click_indicator")
