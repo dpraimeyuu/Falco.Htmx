@@ -205,11 +205,11 @@ let sync (targetOption : TargetOption, syncOption : SyncOption option) =
 /// Whether to force elements to validate themselves before a request
 let validate (value: bool) = Attr.create "hx-validate" (string value)
 
-/// Whether to prevent sensitive data being saved to the history cache
+/// Whether to save sensitive data to the history cache
 let history (value: bool) = Attr.create "hx-history" (string value)
 
 /// Handle any event with a script inline
-let on eventName script = Attr.create $"hx-on:{eventName}"
+let on eventName = Attr.create $"hx-on:{eventName}"
 
 /// adds the `disabled` attribute to the specified elements while a request is in flight
 let disabledElement (targetOption: TargetOption) =
