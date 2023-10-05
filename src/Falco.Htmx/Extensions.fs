@@ -120,3 +120,8 @@ module Response =
     // Allows you to trigger client side events, see the documentation for more info
     let withHxTriggerAfterSwap : HttpResponseModifier =
         Response.withHeaders [ "HX-Trigger-After-Swap", _trueValue ]
+
+    /// A CSS selector that allows you to choose which part of the response is used to be swapped in.
+    /// see the documentation for more info
+    let withHxReselect (selector: string) : HttpResponseModifier =
+        Response.withHeaders [ "HX-Reselect", selector ]

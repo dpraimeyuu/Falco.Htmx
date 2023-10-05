@@ -46,7 +46,7 @@ let handleHtml : HttpHandler =
         Templates.html5 "en"
             [
                 Elem.link [ Attr.href "style.css"; Attr.rel "stylesheet" ]
-                Elem.script [ Attr.src "https://unpkg.com/htmx.org@1.8.0"] []
+                Elem.script [ Attr.src Script.src ] []
             ]
             [
                 Elem.h1 [] [
