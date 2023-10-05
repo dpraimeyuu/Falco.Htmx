@@ -201,3 +201,7 @@ type DisinheritOption =
         | AllAttributes -> "*"
         | ExcludeAttributes [] -> "*"
         | ExcludeAttributes names -> String.Join(" ", names)
+
+module Script =
+    /// The script of the version of HTMX this library is written for.
+    let src = "https://unpkg.com/htmx.org@1.9.6"

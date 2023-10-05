@@ -22,6 +22,11 @@ type HtmxRequestHeaders =
       /// The id of the triggered element if it exists
       HxTrigger : string option }
 
+/// Value for the HX-Trigger Response Header
+type HxTriggerResponse =
+    | Events of string list
+    | DetailedEvents of (string * obj) list
+
 [<RequireQualifiedAccess>]
 module Request =
     let getHtmxHeaders (ctx : HttpContext) : HtmxRequestHeaders =
@@ -100,16 +105,14 @@ module Response =
         Response.withHeaders [ "HX-Retarget", TargetOption.AsString option ]
 
     // Allows you to trigger client side events, see the documentation for more info
-    let withHxTrigger<'T>(event: string, detail : 'T option) : HttpResponseModifier =
+    let withHxTrigger<'T>(triggerResponse: HxTriggerResponse) : HttpResponseModifier =
         let headerValue =
-            match detail with
-            | Some detail' ->
-                [ event, detail ]
+            match triggerResponse with
+            | Events events -> events |> String.concat ", "
+            | DetailedEvents events ->
+                events
                 |> Map.ofList
                 |> fun x -> JsonSerializer.Serialize(x, Json.defaultSerializerOptions)
-
-            | None ->
-                event
 
         Response.withHeaders [ "HX-Trigger", headerValue ]
 
@@ -120,3 +123,8 @@ module Response =
     // Allows you to trigger client side events, see the documentation for more info
     let withHxTriggerAfterSwap : HttpResponseModifier =
         Response.withHeaders [ "HX-Trigger-After-Swap", _trueValue ]
+
+    /// A CSS selector that allows you to choose which part of the response is used to be swapped in.
+    /// see the documentation for more info
+    let withHxReselect (selector: string) : HttpResponseModifier =
+        Response.withHeaders [ "HX-Reselect", selector ]
