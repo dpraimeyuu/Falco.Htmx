@@ -1,6 +1,4 @@
-﻿module HelloWorld.Program
-
-open Falco
+﻿open Falco
 open Falco.Markup
 open Falco.Routing
 open Falco.HostBuilder
@@ -16,13 +14,11 @@ module Components =
             Attr.style "width: 40px; text-align: center; margin-bottom: 5px; border: 1px black solid; cursor: pointer;"
             Hx.post "/click"
             Hx.swap Hx.Swap.innerHTML
-            Hx.target (Hx.Target.css "#click_indicator")
-            (*Hx.trigger [ Hx.Triggers.click (Hx.Triggers.Modifiers.once) ] *) ] [
+            Hx.target (Hx.Target.css "#click_indicator") ] [
                 Elem.div [
                     Attr.id "clicker"
                     Hx.target (Hx.Target.css "#clicker")
-                    Hx.post "/change-to-reset-button"
-                    (*Hx.trigger [Hx.Triggers.fromResponse (Hx.Triggers.ResponseEvent ("change-to-reset-button"))]*) ] [
+                    Hx.post "/change-to-reset-button" ] [
                         Text.raw ("Click me!") ] ]
 
     let clickSection =
@@ -37,8 +33,7 @@ module Components =
         Elem.div [
             Attr.id ("clicker")
             Hx.target (Hx.Target.css "#click-section")
-            Hx.post "/reset"
-            (* Hx.trigger [Hx.Triggers.click (Hx.Triggers.Modifiers.once)] *) ] [
+            Hx.post "/reset" ] [
                 Text.raw ("Reset") ]
 
 let handleHtml : HttpHandler =
@@ -57,9 +52,7 @@ let handleHtml : HttpHandler =
     Response.ofHtml html
 
 let handleClick : HttpHandler =
-    Response.withHxTrigger ("change-to-reset-button", None)
-    >> Response.ofHtml Components.clickedElement
-
+    Response.ofHtml Components.clickedElement
 
 let handlerReset : HttpHandler =
     Response.ofHtml Components.clickSection
