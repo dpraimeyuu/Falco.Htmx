@@ -6,59 +6,57 @@ open Falco.Htmx
 
 module Components =
     let notClickedElement =
-        Elem.div [ Attr.id "click_indicator" ] [
-            Text.raw "Not clicked :-(" ]
+        Elem.div [ Attr.id "click_indicator" ] [ Text.raw "Not clicked :-(" ]
 
     let clickMeElement =
         Elem.div [
             Attr.style "width: 40px; text-align: center; margin-bottom: 5px; border: 1px black solid; cursor: pointer;"
             Hx.post "/click"
             Hx.swap Hx.Swap.innerHTML
-            Hx.target (Hx.Target.css "#click_indicator") ] [
-                Elem.div [
-                    Attr.id "clicker"
-                    Hx.target (Hx.Target.css "#clicker")
-                    Hx.post "/change-to-reset-button" ] [
-                        Text.raw ("Click me!") ] ]
+            Hx.target (Hx.Target.css "#click_indicator")
+        ] [
+            Elem.div [
+                Attr.id "clicker"
+                Hx.target (Hx.Target.css "#clicker")
+                Hx.post "/change-to-reset-button"
+            ] [ Text.raw ("Click me!") ]
+        ]
 
     let clickSection =
         Elem.div [ Attr.id "click-section" ] [
             clickMeElement
-            notClickedElement ]
+            notClickedElement
+        ]
 
-    let clickedElement =
-        Elem.div [ Attr.id "click_indicator" ] [ Text.raw "Clicked!" ]
+    let clickedElement = Elem.div [ Attr.id "click_indicator" ] [ Text.raw "Clicked!" ]
 
     let resetButton =
         Elem.div [
             Attr.id ("clicker")
             Hx.target (Hx.Target.css "#click-section")
-            Hx.post "/reset" ] [
-                Text.raw ("Reset") ]
+            Hx.post "/reset"
+        ] [ Text.raw ("Reset") ]
 
-let handleHtml : HttpHandler =
+let handleHtml: HttpHandler =
     let html =
-        Templates.html5 "en"
-            [
-                Elem.link [ Attr.href "style.css"; Attr.rel "stylesheet" ]
-                Elem.script [ Attr.src Script.src ] []
+        Templates.html5 "en" [
+            Elem.link [
+                Attr.href "style.css"
+                Attr.rel "stylesheet"
             ]
-            [
-                Elem.h1 [] [
-                    Text.raw "Hello from Falco.Htmx" ]
-                Components.clickSection
-            ]
+            Elem.script [ Attr.src Script.src ] []
+        ] [
+            Elem.h1 [] [ Text.raw "Hello from Falco.Htmx" ]
+            Components.clickSection
+        ]
 
     Response.ofHtml html
 
-let handleClick : HttpHandler =
-    Response.ofHtml Components.clickedElement
+let handleClick: HttpHandler = Response.ofHtml Components.clickedElement
 
-let handlerReset : HttpHandler =
-    Response.ofHtml Components.clickSection
+let handlerReset: HttpHandler = Response.ofHtml Components.clickSection
 
-let handleChangeToResetButton : HttpHandler =
-    Response.ofHtml Components.resetButton
+let handleChangeToResetButton: HttpHandler = Response.ofHtml Components.resetButton
 
 
 [<EntryPoint>]
