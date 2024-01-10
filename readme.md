@@ -51,6 +51,15 @@ Big thanks and huuuge kudos to [@pim_brouwers](https://twitter.com/pim_brouwers)
 
 There's an [issue](https://github.com/dpraimeyuu/Falco.Htmx/issues) for that.
 
+## Developing and testing Github Actions locally:
+1. Install [act](https://github.com/nektos/act)
+2. Run in the main directory of the package:
+```shell
+act release -s NUGET_APIKEY=<<ANY_API_KEY>> --artifact-server-path /tmp/artifacts
+```
+where:
+* `<<ANY_API_KEY>>` - put here anything as `act` will run it locally and we don't want to publish anything to nuget
+
 ## License
 
 Built with ♥ by [Damian Plaza](https://github.com/dpraimeyuu) & [Pim Brouwers](https://github.com/pimbrouwers). Licensed under [Apache License 2.0](https://github.com/dpraimeyuu/Falco.Htmx/blob/master/LICENSE).
