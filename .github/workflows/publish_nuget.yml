@@ -62,8 +62,8 @@ jobs:
                   NUGET_DIRECTORY="${NUGetDirectory}"  # Adjust this to your variable name
                   NUGET_APIKEY="${NUGET_APIKEY}"        # Adjust this to your variable name
 
-                  for file in $(find "$NUGET_DIRECTORY" -type f -name "*.nupkg"); do
-                    dotnet nuget push "$file" --api-key "$NUGET_APIKEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+                  for file in $(find $NUGET_DIRECTORY -type f -name "*.nupkg"); do
+                    dotnet nuget push "$file" --api-key $NUGET_APIKEY --source https://api.nuget.org/v3/index.json --skip-duplicate
                   done
               env:
                   NUGetDirectory: ${{ env.NUGET_DIRECTORY }}
