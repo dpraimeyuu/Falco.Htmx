@@ -1,6 +1,6 @@
 # Falco.Htmx
 
-<!-- [![NuGet Version](https://img.shields.io/nuget/v/Falco.svg)](https://www.nuget.org/packages/Falco.Htmx) -->
+[![NuGet Version](https://img.shields.io/nuget/v/Falco.Htmx.svg)](https://www.nuget.org/packages/Falco.Htmx)
 [![build](https://github.com/dpraimeyuu/Falco.Htmx/actions/workflows/build.yml/badge.svg)](https://github.com/dpraimeyuu/Falco.Htmx/actions/workflows/build.yml)
 
 <!--
