@@ -38,10 +38,9 @@ let resetButton =
 
 ### Curious?
 
-If you want to check how it looks and feels:
-1. Go to `/samples/HelloWorld`.
-2. Use `dotnet run` command in your favorite terminal.
-3. Navigate to `http://localhost:5000` in your browser of choice.
+Here are some examples you might find interesting:
+- [Hello World](./samples/HelloWorld)
+- [Simple Heroes Management web application](https://github.com/dpraimeyuu/heroes-management-falco-htmx-sqlite-donald)
 
 ## Kudos
 
