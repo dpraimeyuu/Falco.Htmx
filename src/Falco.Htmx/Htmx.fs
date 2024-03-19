@@ -281,4 +281,4 @@ type DisinheritOption =
 
 module Script =
     /// The script of the version of HTMX this library is written for.
-    let src = "https://unpkg.com/htmx.org@1.9.8"
+    let src = "https://unpkg.com/htmx.org@1.9.11"
